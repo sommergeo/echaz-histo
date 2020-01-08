@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GEO-77 map</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+	integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+	crossorigin=""/>
+
+	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+	integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+	crossorigin=""></script>
+	
+
+	<style>
+	html, body, #map {
+		width: 100%;
+		height: 100%;
+		padding: 0;
+		margin: 0;
+	}
+	</style>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+</head>
+
+
+<body>
+
+<!--<div id="mapid" style="width: 600px; height: 400px; position: relative;"></div> -->
+<div id="mapid" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
+
+<script src="data/geojson/ufk.js"></script>
+
+<script>
+
+	
+	// Create Leaflet map
+	var mymap = L.map('mapid').setView([48.456930, 9.228969], 14);
+	//var mymap = L.map('mapid').fitWorld();
+
+	// add scale
+	var legend = L.control.scale({maxWidth: 150, metric: true, imperial: true}).addTo(mymap);
+
+	
+	// Add basemaps
+	// basemap 1: OSM
+	var basemap_osm = L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+		attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(mymap);
+	
+	// basemap 2: Maps4BW
+	var basemap_maps4bw = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_Maps4BW?", {
+			layers: 'webatlasde',
+			format: 'image/png',
+			transparent: true,
+			attribution: "LGL, www.lgl-bw.de"
+		});
+	//basemap_maps4bw.addTo(mymap)
+	
+	
+	// Overlays
+	// Urflurkarte
+	var olay_ufk = L.geoJSON(ufk);
+	//olay_ufk.addTo(mymap);
+	var olay_ufk_raster = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_LGL-BW_HIST_FKWue_25_K?user=la_bw&password=???", {
+			layers: 'RDS.LY_HISTFK25_SWKOMBI',
+			format: 'image/png',
+			transparent: false,
+			attribution: "&copy; LGL, <a href=\"http://www.lgl-bw.de\" target=\"_blank\">www.lgl-bw.de</a>",
+			minZoom: 16
+		});
+	//olay_ufk_raster.addTo(mymap);
+	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster]);
+	
+
+
+	
+	// Legend
+	var basemaps = {
+		"Open Street Map": basemap_osm,
+		"Maps4BW": basemap_maps4bw};
+		
+	var overlays = {
+		"1818-1840 Urflurkarte": lg_ufk};
+		
+	var legend = L.control.layers(basemaps, overlays, {collapsed: false}).addTo(mymap);
+	
+	
+	
+	
+	// Locate user
+	mymap.locate({setView: true, maxZoom: 18});
+	function onLocationFound(e) {
+		var radius = e.accuracy;
+		L.marker(e.latlng).addTo(mymap)
+			.bindPopup("Sie sind hier").openPopup();
+		L.circle(e.latlng, radius).addTo(mymap);
+	}
+
+	mymap.on('locationfound', onLocationFound);
+	
+</script>
+	
+
+
+
+</body>
+</html>
