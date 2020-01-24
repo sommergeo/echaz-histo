@@ -1,4 +1,4 @@
-var 1999 = {
+var fk1999 = {
 "type": "FeatureCollection",
 "name": "1999",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::5652" } },

@@ -30,8 +30,14 @@
 <!--<div id="mapid" style="width: 600px; height: 400px; position: relative;"></div> -->
 <div id="mapid" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
 
-<script src="data/geojson/ufk.js"></script>
-
+<script src="data/geojson/ufk.js" ></script>
+<script src="data/geojson/1908.js"></script>
+<script src="data/geojson/1936.js"></script>
+<script src="data/geojson/1963.js"></script>
+<script src="data/geojson/1977.js"></script>
+<script src="data/geojson/1987.js"></script>
+<script src="data/geojson/1999.js"></script>    
+   
 <script>
 
 	
@@ -73,7 +79,25 @@
 	//olay_ufk_raster.addTo(mymap);
 	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster]);
 	
+    //Flurkarten 1908 - 1999
+    
+    var olay_1908 = L.geoJSON(fk1908);
+    //olay_1908.addTo(mymyap);
+     
+    var olay_1936 = L.geoJSON(fk1936);
+    //olay_1908.addTo(mymyap);
+       
+    var olay_1963 = L.geoJSON(fk1963);
+    //olay_1908.addTo(mymyap);
+       
+    var olay_1977 = L.geoJSON(fk1977);
+    //olay_1908.addTo(mymyap);
 
+    var olay_1987 = L.geoJSON(fk1987);
+    //olay_1908.addTo(mymyap);
+    
+    var olay_1999 = L.geoJSON(fk1999);
+    //olay_1908.addTo(mymyap);
 
 	
 	// Legend
@@ -82,7 +106,14 @@
 		"Maps4BW": basemap_maps4bw};
 		
 	var overlays = {
-		"1818-1840 Urflurkarte": lg_ufk};
+		"1818-1840 Urflurkarte": lg_ufk,
+        "Flurkarte 1908": olay_1908,
+        "Flurkarte 1936": olay_1936,
+        "Flurkarte 1963": olay_1963,
+        "Flurkarte 1977": olay_1977,
+        "Flurkarte 1987": olay_1987,
+        "Flurkarte 1999": olay_1999,
+    };
 		
 	var legend = L.control.layers(basemaps, overlays, {collapsed: false}).addTo(mymap);
 	
