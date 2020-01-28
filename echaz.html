@@ -30,8 +30,14 @@
 <!--<div id="mapid" style="width: 600px; height: 400px; position: relative;"></div> -->
 <div id="mapid" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
 
-<script src="data/geojson/ufk.js"></script>
-
+<script src="data/geojson/ufk.js" ></script>
+<script src="data/geojson/1908.js"></script>
+<script src="data/geojson/1963korr.js"></script>
+<script src="data/geojson/1977korr.js"></script>
+<script src="data/geojson/1987korr.js"></script>
+<script src="data/geojson/1999korr.js"></script>
+<script src="data/geojson/1936korr.js"></script>
+   
 <script>
 
 	
@@ -72,19 +78,44 @@
 		});
 	//olay_ufk_raster.addTo(mymap);
 	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster]);
-	
-	// add olay 1908 below
-	
 
-
+	// Karten von 1908 bis 1999
+    
+    var olay_1908 = L.geoJSON(fk1908);
+    //  olay_1908.addTo(mymap);
 	
-	// Legend
+    var olay_1936 = L.geoJSON(fk1936korr);
+    //olay_1936.addTo(mymap);
+    
+    var olay_1963 = L.geoJSON(fk1963korr);
+    //olay_1963.addTo(mymap);
+    
+    var olay_1977 = L.geoJSON(fk1977korr);
+    //olay_1977.addTo(mymap);
+ 
+    var olay_1987 = L.geoJSON(fk1987korr);
+    //olay_1977.addTo(mymap);
+    
+    var olay_1999 = L.geoJSON(fk1999korr);
+    //olay_1999.addTo(mymap);
+    
+    
+    
+    // Legend
 	var basemaps = {
 		"Open Street Map": basemap_osm,
 		"Maps4BW": basemap_maps4bw};
 		
 	var overlays = {
-		"1818-1840 Urflurkarte": lg_ufk};
+		"1818-1840 Urflurkarte": lg_ufk,
+        "1908 Landnutzung": olay_1908,
+        "1936 Landnutzung": olay_1936,
+        "1963 Landnutzung": olay_1963,
+        "1977 Landnutzung": olay_1977,
+        "1987 Landnutzung": olay_1987,
+        "1999 Landnutzung": olay_1999,
+       
+    };
 		
 	var legend = L.control.layers(basemaps, overlays, {collapsed: false}).addTo(mymap);
 	
