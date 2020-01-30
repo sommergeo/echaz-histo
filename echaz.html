@@ -37,7 +37,9 @@
 <script src="data/geojson/1987korr.js"></script>
 <script src="data/geojson/1999korr.js"></script>
 <script src="data/geojson/1936korr.js"></script>
-   
+<script src="data/geojson/sagenweg1.js"></script>
+<script src="data/geojson/Rundweg_Ursula_klein.js"></script>
+<script src="data/geojson/Rundweg_Ursula_Lang.js"></script>
 <script>
 
 	
@@ -46,7 +48,7 @@
 	//var mymap = L.map('mapid').fitWorld();
 
 	// add scale
-	var legend = L.control.scale({maxWidth: 150, metric: true, imperial: true}).addTo(mymap);
+	var legend = L.control.scale({maxWidth: 250, metric: true, imperial: true}).addTo(mymap);
 
 	
 	// Add basemaps
@@ -75,7 +77,24 @@
         });
     // basemap_OART.addTo(mymap);
     
-
+    //Styles für Landnutzung und Wanderwege
+    var mystyle_sagenweg = {
+        "color": "#e41a1c",
+        "weight": 7,
+        "opacity": 0.6,
+    };
+    
+    var mystyle_ursula_kurz = {
+        "color": '#33a02c',
+        "weight": 7,
+        "opacity": 0.6,
+    };
+    
+    var mystyle_ursula_lang = {
+        "color": '#ff7f00',
+        "weight": 7,
+        "opacity": 0.6,
+    };
 	
 	// Overlays
 	// Urflurkarte
@@ -111,8 +130,23 @@
     var olay_1999 = L.geoJSON(fk1999korr);
     //olay_1999.addTo(mymap);
     
+    //Overlay Wanderwege
+    //Sagenweg
+    var hiking_sagenweg = L.geoJSON(Hiking_Sagenweg, {
+        style: mystyle_sagenweg
+    });
+    //hiking_sagenweg.addTo(mymap);
     
+    //Wanderungen am Ursulaberg
+    var hiking_ursula_rund_kurz = L.geoJSON(hiking_ursula_rund_kurz, {
+        style: mystyle_ursula_kurz
+    });
+    //hiking_ursula_rund_kurz.addTo(mymap);
     
+    var hiking_ursula_rund_lang = L.geoJSON(hiking_ursula_rund_lang, {
+        style: mystyle_ursula_lang
+    });
+    //hiking_ursula_rund_lang.addTo(mymap);
     
     // Legend
 	var basemaps = {
@@ -129,11 +163,15 @@
         "1977 Landnutzung": olay_1977,
         "1987 Landnutzung": olay_1987,
         "1999 Landnutzung": olay_1999,
+        "Sagenweg": hiking_sagenweg,
+        "Ursulaberg Rundweg kurz": hiking_ursula_rund_kurz,
+        "Ursulaberg Rundweg Lang": hiking_ursula_rund_lang,
        
     };
     
-		
-	var legend = L.control.layers(basemaps, overlays, {collapsed: false}).addTo(mymap);
+// Laywer Controlls
+	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
+
     
 	
 	// Locate user
