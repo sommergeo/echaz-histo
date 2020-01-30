@@ -50,20 +50,32 @@
 
 	
 	// Add basemaps
-	// basemap 1: OSM
+	// Basemap 1: OSM
 	var basemap_osm = L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
 		attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(mymap);
 	
-	// basemap 2: Maps4BW
+	// Basemap 2: Maps4BW
 	var basemap_maps4bw = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_Maps4BW?", {
 			layers: 'webatlasde',
 			format: 'image/png',
 			transparent: true,
 			attribution: "LGL, www.lgl-bw.de"
 		});
-	//basemap_maps4bw.addTo(mymap)
-	
+	//basemap_maps4bw.addTo(mymap);
+    
+    // Basemap 3: Oberamtsbeschreibung
+    var basemap_OART = L.tileLayer.wms("http://134.2.217.5:81/cgi-bin/qgis_mapserv.fcgi?VERSION=1.3.0&Map=/projects/Oberamt/Oberamt_RT.qgs&", {
+        layers: 'Oberamt_Reutlingen_Karte4_modified',
+        format: 'image/png',
+        transparent: 'true',
+        minZoom: '12',
+        attribution: 'Wikisource, https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen',
+        
+        });
+    // basemap_OART.addTo(mymap);
+    
+
 	
 	// Overlays
 	// Urflurkarte
@@ -74,7 +86,7 @@
 			format: 'image/png',
 			transparent: false,
 			attribution: "&copy; LGL, <a href=\"http://www.lgl-bw.de\" target=\"_blank\">www.lgl-bw.de</a>",
-			minZoom: 16
+			minZoom: 0
 		});
 	//olay_ufk_raster.addTo(mymap);
 	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster]);
@@ -101,10 +113,13 @@
     
     
     
+    
     // Legend
 	var basemaps = {
 		"Open Street Map": basemap_osm,
-		"Maps4BW": basemap_maps4bw};
+		"Maps4BW": basemap_maps4bw,
+        "Oberamtsbeschreibung Reutlingen": basemap_OART,
+       };
 		
 	var overlays = {
 		"1818-1840 Urflurkarte": lg_ufk,
@@ -116,11 +131,10 @@
         "1999 Landnutzung": olay_1999,
        
     };
+    
 		
 	var legend = L.control.layers(basemaps, overlays, {collapsed: false}).addTo(mymap);
-	
-	
-	
+    
 	
 	// Locate user
 	mymap.locate({setView: true, maxZoom: 18});
