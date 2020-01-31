@@ -40,6 +40,7 @@
 <script src="data/geojson/sagenweg1.js"></script>
 <script src="data/geojson/Rundweg_Ursula_klein.js"></script>
 <script src="data/geojson/Rundweg_Ursula_Lang.js"></script>
+<script src="data/geojson/POI_demo.js"></script>
 <script>
 
 	
@@ -77,7 +78,7 @@
         });
     // basemap_OART.addTo(mymap);
     
-    //Styles für Landnutzung und Wanderwege
+    //Styles für Wanderwege und POI
     var mystyle_sagenweg = {
         "color": "#e41a1c",
         "weight": 7,
@@ -96,7 +97,14 @@
         "opacity": 0.6,
     };
 	
-	// Overlays
+    var myIcon = L.icon ({
+        iconUrl: 'https://image.flaticon.com/icons/svg/883/883787.svg',
+        iconSize: [38, 50],
+        iconAnchor: [22, 50],
+        popupAnchor: [-3, 50],
+    });
+  
+// Overlays
 	// Urflurkarte
 	var olay_ufk = L.geoJSON(ufk);
 	//olay_ufk.addTo(mymap);
@@ -130,7 +138,7 @@
     var olay_1999 = L.geoJSON(fk1999korr);
     //olay_1999.addTo(mymap);
     
-    //Overlay Wanderwege
+//Overlay Wanderwege
     //Sagenweg
     var hiking_sagenweg = L.geoJSON(Hiking_Sagenweg, {
         style: mystyle_sagenweg
@@ -147,6 +155,11 @@
         style: mystyle_ursula_lang
     });
     //hiking_ursula_rund_lang.addTo(mymap);
+    
+//Overlay Points of Interest
+    //POI Demo nur für vorläufige Screenshots
+    var POI_demo = L.geoJSON(POI_demo);
+    //POI_demo.addTo(mymap);
     
     // Legend
 	var basemaps = {
@@ -166,6 +179,7 @@
         "Sagenweg": hiking_sagenweg,
         "Ursulaberg Rundweg kurz": hiking_ursula_rund_kurz,
         "Ursulaberg Rundweg Lang": hiking_ursula_rund_lang,
+        "Points of Interest": POI_demo,
        
     };
     
