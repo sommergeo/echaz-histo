@@ -73,7 +73,7 @@
         format: 'image/png',
         transparent: 'true',
         minZoom: '12',
-        attribution: 'Wikisource, https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen',
+        attribution: 'Wikisource, https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen', // Link daraus machen!
         
         });
     // basemap_OART.addTo(mymap);
@@ -116,7 +116,7 @@
 			minZoom: 0
 		});
 	//olay_ufk_raster.addTo(mymap);
-	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster]);
+	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster]); // Oberamtsbeschreibung hinzufügen - jeweils andere Zoomstufe 0-12 und 12-20 (OA)
 
 	// Karten von 1908 bis 1999
     
