@@ -72,9 +72,9 @@
         layers: 'Oberamt_Reutlingen_Karte4_modified',
         format: 'image/png',
         transparent: 'true',
-        minZoom: '12',
-        attribution: 'Wikisource, https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen', // Link daraus machen!
-        
+        minZoom: 0,
+        maxZoom: 12,
+        attribution: '<a href="https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen">Wikisource</a>'
         });
     // basemap_OART.addTo(mymap);
     
@@ -106,18 +106,24 @@
   
 // Overlays
 	// Urflurkarte
-	var olay_ufk = L.geoJSON(ufk);
+	var olay_ufk = L.geoJSON(ufk, {
+        minZoom: 0,
+        maxZoom: 12
+    });
 	//olay_ufk.addTo(mymap);
 	var olay_ufk_raster = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_LGL-BW_HIST_FKWue_25_K?user=la_bw&password=???", {
 			layers: 'RDS.LY_HISTFK25_SWKOMBI',
 			format: 'image/png',
 			transparent: false,
 			attribution: "&copy; LGL, <a href=\"http://www.lgl-bw.de\" target=\"_blank\">www.lgl-bw.de</a>",
-			minZoom: 0
+			minZoom: 12,
+            maxZoom: 20
 		});
 	//olay_ufk_raster.addTo(mymap);
-	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster]); // Oberamtsbeschreibung hinzufügen - jeweils andere Zoomstufe 0-12 und 12-20 (OA)
-
+	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); // Oberamtsbeschreibung hinzufügen - jeweils andere Zoomstufe 0-12 und 12-20 (OA)
+    
+        
+        
 	// Karten von 1908 bis 1999
     
     var olay_1908 = L.geoJSON(fk1908);
@@ -165,11 +171,11 @@
 	var basemaps = {
 		"Open Street Map": basemap_osm,
 		"Maps4BW": basemap_maps4bw,
-        "Oberamtsbeschreibung Reutlingen": basemap_OART,
+        //"Oberamtsbeschreibung Reutlingen": basemap_OART,
        };
 		
 	var overlays = {
-		"1818-1840 Urflurkarte": lg_ufk,
+		"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
         "1908 Landnutzung": olay_1908,
         "1936 Landnutzung": olay_1936,
         "1963 Landnutzung": olay_1963,
@@ -182,8 +188,33 @@
         "Points of Interest": POI_demo,
        
     };
+   
+    // Zoom Levels Versuch 1
+    //if(map.getZoom()>12){
+    //    if (map.haslayer(olay_ufk)){
+    //        map.removeLayer(olay_ufk);
+    //    }
+    //    basemap_OART.addTo(mymap);
+    //} else{
+    //    if (Map.hasLayer(basemap_OART)){
+    //        map.removeLayer(basemap_OART);             
+    //    }
+    //    olay_ufk:addTo(mymap;)
+    //}
     
-// Laywer Controlls
+    //Zoom Levels Versuch 2
+    //map.on('zoomed', function() {
+    //    if (map.getzoom() <12 && map.hasLayer(basemap_OART)){
+    //    map.removeLayer(basemap_OART);
+    //    }
+    //if (map.getZoom() >12 && map.hasLayer(basemap_OART) == false)
+    //    {
+    //        map.addLayer(basemap_OART)
+    //    }
+    //});
+    
+    
+// Layer Controlls
 	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
     
