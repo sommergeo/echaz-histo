@@ -97,13 +97,19 @@
         "opacity": 0.6,
     };
 	
-    var myIcon = L.icon ({
-        iconUrl: 'https://image.flaticon.com/icons/svg/883/883787.svg',
-        iconSize: [38, 50],
-        iconAnchor: [22, 50],
-        popupAnchor: [-3, 50],
-    });
-  
+    function createCustomIcon (feature, latlng){
+        let myIcon = L.icon ({
+            iconUrl: 'https://image.flaticon.com/icons/svg/426/426958.svg',
+            iconSize: [50, 40],
+            iconAnchor: [12, 12],
+            popupAnchor: [13, -10],
+        })
+        return L.marker(latlng, {icon: myIcon})
+        }
+    let myLayerOptions = {
+        pointToLayer: createCustomIcon
+    }
+
 // Overlays
 	// Urflurkarte
 	var olay_ufk = L.geoJSON(ufk, {
@@ -164,7 +170,7 @@
     
 //Overlay Points of Interest
     //POI Demo nur für vorläufige Screenshots
-    var POI_demo = L.geoJSON(POI_demo);
+    var POI_demo = L.geoJSON(POI_demo, myLayerOptions);
     //POI_demo.addTo(mymap);
     
     // Legend
@@ -188,36 +194,13 @@
         "Points of Interest": POI_demo,
        
     };
-   
-    // Zoom Levels Versuch 1
-    //if(map.getZoom()>12){
-    //    if (map.haslayer(olay_ufk)){
-    //        map.removeLayer(olay_ufk);
-    //    }
-    //    basemap_OART.addTo(mymap);
-    //} else{
-    //    if (Map.hasLayer(basemap_OART)){
-    //        map.removeLayer(basemap_OART);             
-    //    }
-    //    olay_ufk:addTo(mymap;)
-    //}
-    
-    //Zoom Levels Versuch 2
-    //map.on('zoomed', function() {
-    //    if (map.getzoom() <12 && map.hasLayer(basemap_OART)){
-    //    map.removeLayer(basemap_OART);
-    //    }
-    //if (map.getZoom() >12 && map.hasLayer(basemap_OART) == false)
-    //    {
-    //        map.addLayer(basemap_OART)
-    //    }
-    //});
-    
+      
     
 // Layer Controlls
 	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
-    
+//Pop-Ups Vorläufig
+    POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
 	
 	// Locate user
 	mymap.locate({setView: true, maxZoom: 18});
