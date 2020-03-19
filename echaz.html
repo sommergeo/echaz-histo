@@ -72,9 +72,9 @@
         layers: 'Oberamt_Reutlingen_Karte4_modified',
         format: 'image/png',
         transparent: 'true',
-        minZoom: '12',
-        attribution: 'Wikisource, https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen',
-        
+        minZoom: 0,
+        maxZoom: 12,
+        attribution: '<a href="https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen">Wikisource</a>'
         });
     // basemap_OART.addTo(mymap);
     
@@ -97,27 +97,39 @@
         "opacity": 0.6,
     };
 	
-    var myIcon = L.icon ({
-        iconUrl: 'https://image.flaticon.com/icons/svg/883/883787.svg',
-        iconSize: [38, 50],
-        iconAnchor: [22, 50],
-        popupAnchor: [-3, 50],
-    });
-  
+    function createCustomIcon (feature, latlng){
+        let myIcon = L.icon ({
+            iconUrl: 'https://image.flaticon.com/icons/svg/426/426958.svg',
+            iconSize: [50, 40],
+            iconAnchor: [12, 12],
+            popupAnchor: [13, -10],
+        })
+        return L.marker(latlng, {icon: myIcon})
+        }
+    let myLayerOptions = {
+        pointToLayer: createCustomIcon
+    }
+
 // Overlays
 	// Urflurkarte
-	var olay_ufk = L.geoJSON(ufk);
+	var olay_ufk = L.geoJSON(ufk, {
+        minZoom: 0,
+        maxZoom: 12
+    });
 	//olay_ufk.addTo(mymap);
 	var olay_ufk_raster = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_LGL-BW_HIST_FKWue_25_K?user=la_bw&password=???", {
 			layers: 'RDS.LY_HISTFK25_SWKOMBI',
 			format: 'image/png',
 			transparent: false,
 			attribution: "&copy; LGL, <a href=\"http://www.lgl-bw.de\" target=\"_blank\">www.lgl-bw.de</a>",
-			minZoom: 0
+			minZoom: 12,
+            maxZoom: 20
 		});
 	//olay_ufk_raster.addTo(mymap);
-	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster]);
-
+	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); // Oberamtsbeschreibung hinzufügen - jeweils andere Zoomstufe 0-12 und 12-20 (OA)
+    
+        
+        
 	// Karten von 1908 bis 1999
     
     var olay_1908 = L.geoJSON(fk1908);
@@ -158,18 +170,18 @@
     
 //Overlay Points of Interest
     //POI Demo nur für vorläufige Screenshots
-    var POI_demo = L.geoJSON(POI_demo);
+    var POI_demo = L.geoJSON(POI_demo, myLayerOptions);
     //POI_demo.addTo(mymap);
     
     // Legend
 	var basemaps = {
 		"Open Street Map": basemap_osm,
 		"Maps4BW": basemap_maps4bw,
-        "Oberamtsbeschreibung Reutlingen": basemap_OART,
+        //"Oberamtsbeschreibung Reutlingen": basemap_OART,
        };
 		
 	var overlays = {
-		"1818-1840 Urflurkarte": lg_ufk,
+		"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
         "1908 Landnutzung": olay_1908,
         "1936 Landnutzung": olay_1936,
         "1963 Landnutzung": olay_1963,
@@ -182,11 +194,14 @@
         "Points of Interest": POI_demo,
        
     };
-    
-// Laywer Controlls
-	var legend = L.control.layers(basemaps, overlays,{collapsed: true}).addTo(mymap);
+      
+ 
+// Layer Controlls
+	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
-    
+
+//Pop-Ups Vorläufig
+    POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
 	
 	// Locate user
 	mymap.locate({setView: true, maxZoom: 18});
