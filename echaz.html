@@ -78,7 +78,8 @@
         });
     // basemap_OART.addTo(mymap);
     
-    //Styles für Wanderwege und POI
+    //STYLING
+        //Wanderwege & POIs
     var mystyle_sagenweg = {
         "color": "#e41a1c",
         "weight": 7,
@@ -96,7 +97,21 @@
         "weight": 7,
         "opacity": 0.6,
     };
+    
+    // JSON
+    
+    var mystyle_industrie = {
+        "fill": true,
+        "fillColor": '#818181',
+        "fillOpacity": 1.0,
+        "stroke": true,
+        "color": '#000000',
+        "weight": 1,
+        "opacity": 1.0,
+        
+    };
 	
+    // Custom Icon for POI --> Attribution?
     function createCustomIcon (feature, latlng){
         let myIcon = L.icon ({
             iconUrl: 'https://image.flaticon.com/icons/svg/426/426958.svg',
@@ -107,7 +122,7 @@
         return L.marker(latlng, {icon: myIcon})
         }
     let myLayerOptions = {
-        pointToLayer: createCustomIcon
+        pointToLayer: createCustomIcon    
     }
 
 // Overlays
@@ -132,7 +147,14 @@
         
 	// Karten von 1908 bis 1999
     
-    var olay_1908 = L.geoJSON(fk1908);
+    var olay_1908 = L.geoJSON(fk1908, {
+        style: function(feature){
+            switch (feature.properties.Klasse){
+                case "1": return {fillColor: '#A7A3A3', fillOpacity: 0.5};
+                case "2": return {fillColor: '#E7A83F', fillOpacity: 0.5};
+            }
+        }
+    });
     //  olay_1908.addTo(mymap);
 	
     var olay_1936 = L.geoJSON(fk1936korr);
