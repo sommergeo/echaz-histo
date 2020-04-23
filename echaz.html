@@ -77,6 +77,7 @@
         attribution: '<a href="https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen">Wikisource</a>'
         });
     // basemap_OART.addTo(mymap);
+        
     
     //STYLING
         //Wanderwege & POIs
@@ -141,7 +142,7 @@
             maxZoom: 20
 		});
 	//olay_ufk_raster.addTo(mymap);
-	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); // Oberamtsbeschreibung hinzufügen - jeweils andere Zoomstufe 0-12 und 12-20 (OA)
+	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); 
     
         
         
@@ -149,8 +150,8 @@
     
     var olay_1908 = L.geoJSON(fk1908, {
         style: function(feature){
-            switch (feature.properties.Klasse){
-                case "1": return {fillColor: '#A7A3A3', fillOpacity: 0.5};
+            switch (feature.properties.klasse){
+                case "Industrie\/Gewerbe": return {fillColor: '#A7A3A3', fillOpacity: 0.5};
                 case "2": return {fillColor: '#E7A83F', fillOpacity: 0.5};
             }
         }
@@ -171,6 +172,9 @@
     
     var olay_1999 = L.geoJSON(fk1999korr);
     //olay_1999.addTo(mymap);
+    
+    // Style Versuch #2
+
     
 //Overlay Wanderwege
     //Sagenweg
@@ -217,10 +221,9 @@
        
     };
       
- 
+    
 // Layer Controlls
 	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
-
 
 //Pop-Ups Vorläufig
     POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
