@@ -98,20 +98,7 @@
         "weight": 7,
         "opacity": 0.6,
     };
-    
-    // JSON
-    
-    var mystyle_industrie = {
-        "fill": true,
-        "fillColor": '#818181',
-        "fillOpacity": 1.0,
-        "stroke": true,
-        "color": '#000000',
-        "weight": 1,
-        "opacity": 1.0,
-        
-    };
-	
+
     // Custom Icon for POI --> Attribution?
     function createCustomIcon (feature, latlng){
         let myIcon = L.icon ({
@@ -125,10 +112,41 @@
     let myLayerOptions = {
         pointToLayer: createCustomIcon    
     }
+    
+      // Polygon Styling nach Klasse
+    function getClassColor(feature){
+        console.log(feature)
+        switch (feature.properties.Klasse){
+            case 1 : return '#2A2A2A';
+            case 2 : return '#FF7F7F';
+            case 3 : return '#FC3D45';
+            case 4 : return '#005B0F';
+            case 5 : return '#24FF84';
+            case 6 : return '#6AFF24';
+            case 7 : return '#986C00';
+            case 8 : return '#DED402';
+            case 10 : return '#02DED7';
+            case 11 : return '#BD02DE';
+            case 12 : return '#D8FF00';
+            case 13 : return '#868686';
+        }
+       };
+    
+    function ClassStyle(feature) {
+        return {
+        fillColor: getClassColor(feature),
+        weight: 2,
+        opacity: 10,
+        color: 'black',
+        dashArray: '3',
+        fillOpacity: 0.7
+        };
+    }    
 
 // Overlays
 	// Urflurkarte
 	var olay_ufk = L.geoJSON(ufk, {
+        style :ClassStyle,
         minZoom: 0,
         maxZoom: 12
     });
@@ -143,34 +161,37 @@
 		});
 	//olay_ufk_raster.addTo(mymap);
 	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); 
-    
-        
         
 	// Karten von 1908 bis 1999
     
     var olay_1908 = L.geoJSON(fk1908, {
-        style: function(feature){
-            switch (feature.properties.klasse){
-                case "Industrie\/Gewerbe": return {fillColor: '#A7A3A3', fillOpacity: 0.5};
-                case "2": return {fillColor: '#E7A83F', fillOpacity: 0.5};
-            }
-        }
+        style: ClassStyle
     });
     //  olay_1908.addTo(mymap);
 	
-    var olay_1936 = L.geoJSON(fk1936korr);
+    var olay_1936 = L.geoJSON(fk1936korr, {
+        style: ClassStyle
+    });
     //olay_1936.addTo(mymap);
     
-    var olay_1963 = L.geoJSON(fk1963korr);
+    var olay_1963 = L.geoJSON(fk1963korr,{
+        style: ClassStyle
+    });
     //olay_1963.addTo(mymap);
     
-    var olay_1977 = L.geoJSON(fk1977korr);
+    var olay_1977 = L.geoJSON(fk1977korr,{
+        style: ClassStyle
+    });
     //olay_1977.addTo(mymap);
  
-    var olay_1987 = L.geoJSON(fk1987korr);
+    var olay_1987 = L.geoJSON(fk1987korr, {
+        style: ClassStyle
+    });
     //olay_1977.addTo(mymap);
     
-    var olay_1999 = L.geoJSON(fk1999korr);
+    var olay_1999 = L.geoJSON(fk1999korr, {
+        style: ClassStyle
+    });
     //olay_1999.addTo(mymap);
     
     // Style Versuch #2
@@ -203,8 +224,9 @@
 	var basemaps = {
 		"Open Street Map": basemap_osm,
 		"Maps4BW": basemap_maps4bw,
-        //"Oberamtsbeschreibung Reutlingen": basemap_OART,
+        "Oberamtsbeschreibung Reutlingen": basemap_OART
        };
+    
 		
 	var overlays = {
 		"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
@@ -223,7 +245,7 @@
       
     
 // Layer Controlls
-	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
+	var legendolay = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
 //Pop-Ups Vorläufig
     POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
