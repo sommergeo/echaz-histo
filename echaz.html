@@ -41,6 +41,13 @@
 <script src="data/geojson/Rundweg_Ursula_klein.js"></script>
 <script src="data/geojson/Rundweg_Ursula_Lang.js"></script>
 <script src="data/geojson/POI_demo.js"></script>
+<script src="data/geojson/Pfullinger%20Hallen.js"></script>
+<script src="data/geojson/Sch%C3%B6nbergturm.js"></script>
+<script src="data/geojson/Stadtmuseeum.js"></script>
+<script src="data/geojson/Touristeninformation.js"></script>
+<script src="data/geojson/Trachtenmuseeum.js"></script>
+<script src="data/geojson/Georgenberg.js"></script>
+<script src="data/geojson/Klostergarten.js"></script>
 <script>
 
 	
@@ -55,7 +62,7 @@
 	// Add basemaps
 	// Basemap 1: OSM
 	var basemap_osm = L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
-		attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>',
 	}).addTo(mymap);
 	
 	// Basemap 2: Maps4BW
@@ -99,36 +106,71 @@
         "opacity": 0.6,
     };
 
-    // Custom Icon for POI --> Attribution?
+    // Custom Icons for Aussichtspunkte
     function createCustomIcon (feature, latlng){
         let myIcon = L.icon ({
-            iconUrl: 'https://image.flaticon.com/icons/svg/426/426958.svg',
+            iconUrl: 'https://image.flaticon.com/icons/svg/1827/1827911.svg',
             iconSize: [50, 40],
             iconAnchor: [12, 12],
             popupAnchor: [13, -10],
         })
-        return L.marker(latlng, {icon: myIcon})
+        return L.marker(latlng, {
+            icon: myIcon
+        })
         }
     let myLayerOptions = {
         pointToLayer: createCustomIcon    
     }
     
-      // Polygon Styling nach Klasse
+     //Custom Icon for POI Touristeninformation
+    function createCustomIcon2(feature, latlng){
+        let myIcon2 = L.icon({
+            iconUrl: 'https://image.flaticon.com/icons/svg/1828/1828872.svg',
+            iconSize: [35,35],
+            popupAnchor: [10, -10],
+        }); 
+        return L.marker(latlng, {
+            icon: myIcon2
+        })
+    }
+    let myLayerOptions2 = {
+        pointToLayer : createCustomIcon2
+    }
+    
+    //Custom Icon for POI Stadtmuseeum, Trachtenmuseeum, Pfullinger Hallen
+    function createCustomIcon3(feature, latlng){
+        let myIcon3 = L.icon({
+            iconUrl: 'https://image.flaticon.com/icons/svg/273/273638.svg',
+            iconSize: [30, 30],
+            popupAnchor: [10,-10],
+        });
+        return L.marker(latlng, {
+            icon: myIcon3
+        })
+        }
+        let myLayerOptions3 = {
+        pointToLayer: createCustomIcon3
+        }
+    
+    
+    
+    
+    // Polygon Styling nach Klasse
     function getClassColor(feature){
         console.log(feature)
         switch (feature.properties.Klasse){
-            case 1 : return '#2A2A2A';
-            case 2 : return '#FF7F7F';
-            case 3 : return '#FC3D45';
-            case 4 : return '#005B0F';
+            case 1 : return '#000000';
+            case 2 : return '#757575';
+            case 3 : return '#DBDBDB';
+            case 4 : return '#115F11';
             case 5 : return '#24FF84';
-            case 6 : return '#6AFF24';
+            case 6 : return '#22DFA3';
             case 7 : return '#986C00';
             case 8 : return '#DED402';
-            case 10 : return '#02DED7';
-            case 11 : return '#BD02DE';
+            case 10 : return '#72BA9E';
+            case 11 : return '#FF7171';
             case 12 : return '#D8FF00';
-            case 13 : return '#868686';
+            case 13 : return '#7A00FC';
         }
        };
     
@@ -216,10 +258,29 @@
     //hiking_ursula_rund_lang.addTo(mymap);
     
 //Overlay Points of Interest
-    //POI Demo nur für vorläufige Screenshots
-    var POI_demo = L.geoJSON(POI_demo, myLayerOptions);
-    //POI_demo.addTo(mymap);
     
+    var Klostergarten = L.geoJSON(Klostergarten);
+    //Klostergarten.addTo(mymap);
+    
+    var Georgenberg = L.geoJSON(Georgenberg, myLayerOptions);
+    //Georgenberg.addTo(mymap);
+    
+    var PfullingerHallen = L.geoJSON(PfullingerHallen, myLayerOptions3);
+    // PfullingerHallen.addTo(mymap);
+    
+    var Schönbergturm = L.geoJSON(Schönbergturm, myLayerOptions);
+    //Schönbergturm.addTo(mymap);
+    
+    var Stadtmuseeum = L.geoJSON(Stadtmuseeum, myLayerOptions3);
+    //Stadtmuseeum.addTo(mymap);
+    
+    var Touristeninformation = L.geoJSON(Touristeninformation, myLayerOptions2);
+    //Touristeninformation.addTo(mymap);
+    
+    var Trachtenmuseeum = L.geoJSON(Trachtenmuseeum, myLayerOptions3);
+    // Trachtenmuseeum.addTo(mymap);
+    
+    var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Stadtmuseeum, Touristeninformation, Trachtenmuseeum]);
     // Legend
 	var basemaps = {
 		"Open Street Map": basemap_osm,
@@ -239,13 +300,20 @@
         "Sagenweg": hiking_sagenweg,
         "Ursulaberg Rundweg kurz": hiking_ursula_rund_kurz,
         "Ursulaberg Rundweg Lang": hiking_ursula_rund_lang,
-        "Points of Interest": POI_demo,
+        //"Klostergarten": Klostergarten,
+        //"Georgenberg" : Georgenberg,
+        //"Pfullinger Hallen" : PfullingerHallen,
+        //"Schönbergturm" : Schönbergturm,
+        //"Stadtmuseeum im Schlössle" : Stadtmuseeum,
+        //"Touristeninformation" : Touristeninformation,
+        //"Trachtenmuseeum" : Trachtenmuseeum,
+        "Sehenswertes in Pfullingen" : PointsOfInterest,
        
     };
       
     
 // Layer Controlls
-	var legendolay = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
+	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
 //Pop-Ups Vorläufig
     POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
@@ -260,6 +328,9 @@
 	}
 
 	mymap.on('locationfound', onLocationFound);
+    
+    //Attribution Icons allg.
+   L.controlAttribution.addAttribution('Icons erstellt von href="https://www.flaticon.com/de/autoren/freepik').addTo(mymap);
 	
 </script>
 	
