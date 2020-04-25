@@ -9,6 +9,7 @@
 	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
 	integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
 	crossorigin=""></script>
+    
 	
 
 	<style>
@@ -30,6 +31,7 @@
 <!--<div id="mapid" style="width: 600px; height: 400px; position: relative;"></div> -->
 <div id="mapid" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
 
+<script src="Plugins/leaflet.groupedlayercontrol.js" ></script>
 <script src="data/geojson/ufk.js" ></script>
 <script src="data/geojson/1908.js"></script>
 <script src="data/geojson/1963korr.js"></script>
@@ -281,6 +283,8 @@
     // Trachtenmuseeum.addTo(mymap);
     
     var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Stadtmuseeum, Touristeninformation, Trachtenmuseeum]);
+    
+   
     // Legend
 	var basemaps = {
 		"Open Street Map": basemap_osm,
@@ -300,21 +304,22 @@
         "Sagenweg": hiking_sagenweg,
         "Ursulaberg Rundweg kurz": hiking_ursula_rund_kurz,
         "Ursulaberg Rundweg Lang": hiking_ursula_rund_lang,
-        //"Klostergarten": Klostergarten,
-        //"Georgenberg" : Georgenberg,
-        //"Pfullinger Hallen" : PfullingerHallen,
-        //"Schönbergturm" : Schönbergturm,
-        //"Stadtmuseeum im Schlössle" : Stadtmuseeum,
-        //"Touristeninformation" : Touristeninformation,
-        //"Trachtenmuseeum" : Trachtenmuseeum,
+        "Klostergarten": Klostergarten,
+        "Georgenberg" : Georgenberg,
+        "Pfullinger Hallen" : PfullingerHallen,
+        "Schönbergturm" : Schönbergturm,
+        "Stadtmuseeum im Schlössle" : Stadtmuseeum,
+        "Touristeninformation" : Touristeninformation,
+        "Trachtenmuseeum" : Trachtenmuseeum,
         "Sehenswertes in Pfullingen" : PointsOfInterest,
        
     };
       
     
 // Layer Controlls
-	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
+var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
+    
 //Pop-Ups Vorläufig
     POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
 	
@@ -329,8 +334,7 @@
 
 	mymap.on('locationfound', onLocationFound);
     
-    //Attribution Icons allg.
-   L.controlAttribution.addAttribution('Icons erstellt von href="https://www.flaticon.com/de/autoren/freepik').addTo(mymap);
+
 	
 </script>
 	
