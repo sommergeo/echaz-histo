@@ -9,6 +9,7 @@
 	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
 	integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
 	crossorigin=""></script>
+    
 	
 
 	<style>
@@ -30,6 +31,7 @@
 <!--<div id="mapid" style="width: 600px; height: 400px; position: relative;"></div> -->
 <div id="mapid" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
 
+<script src="Plugins/leaflet.groupedlayercontrol.js" ></script>
 <script src="data/geojson/ufk.js" ></script>
 <script src="data/geojson/1908.js"></script>
 <script src="data/geojson/1963korr.js"></script>
@@ -41,6 +43,13 @@
 <script src="data/geojson/Rundweg_Ursula_klein.js"></script>
 <script src="data/geojson/Rundweg_Ursula_Lang.js"></script>
 <script src="data/geojson/POI_demo.js"></script>
+<script src="data/geojson/Pfullinger%20Hallen.js"></script>
+<script src="data/geojson/Sch%C3%B6nbergturm.js"></script>
+<script src="data/geojson/Stadtmuseeum.js"></script>
+<script src="data/geojson/Touristeninformation.js"></script>
+<script src="data/geojson/Trachtenmuseeum.js"></script>
+<script src="data/geojson/Georgenberg.js"></script>
+<script src="data/geojson/Klostergarten.js"></script>
 <script>
 
 	
@@ -55,7 +64,7 @@
 	// Add basemaps
 	// Basemap 1: OSM
 	var basemap_osm = L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
-		attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>',
 	}).addTo(mymap);
 	
 	// Basemap 2: Maps4BW
@@ -77,8 +86,10 @@
         attribution: '<a href="https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen">Wikisource</a>'
         });
     // basemap_OART.addTo(mymap);
+        
     
-    //Styles für Wanderwege und POI
+    //STYLING
+        //Wanderwege & POIs
     var mystyle_sagenweg = {
         "color": "#e41a1c",
         "weight": 7,
@@ -96,23 +107,90 @@
         "weight": 7,
         "opacity": 0.6,
     };
-	
+
+    // Custom Icons for Aussichtspunkte
     function createCustomIcon (feature, latlng){
         let myIcon = L.icon ({
-            iconUrl: 'https://image.flaticon.com/icons/svg/426/426958.svg',
+            iconUrl: 'https://image.flaticon.com/icons/svg/1827/1827911.svg',
             iconSize: [50, 40],
             iconAnchor: [12, 12],
             popupAnchor: [13, -10],
         })
-        return L.marker(latlng, {icon: myIcon})
+        return L.marker(latlng, {
+            icon: myIcon
+        })
         }
     let myLayerOptions = {
-        pointToLayer: createCustomIcon
+        pointToLayer: createCustomIcon    
     }
+    
+     //Custom Icon for POI Touristeninformation
+    function createCustomIcon2(feature, latlng){
+        let myIcon2 = L.icon({
+            iconUrl: 'https://image.flaticon.com/icons/svg/1828/1828872.svg',
+            iconSize: [35,35],
+            popupAnchor: [10, -10],
+        }); 
+        return L.marker(latlng, {
+            icon: myIcon2
+        })
+    }
+    let myLayerOptions2 = {
+        pointToLayer : createCustomIcon2
+    }
+    
+    //Custom Icon for POI Stadtmuseeum, Trachtenmuseeum, Pfullinger Hallen
+    function createCustomIcon3(feature, latlng){
+        let myIcon3 = L.icon({
+            iconUrl: 'https://image.flaticon.com/icons/svg/273/273638.svg',
+            iconSize: [30, 30],
+            popupAnchor: [10,-10],
+        });
+        return L.marker(latlng, {
+            icon: myIcon3
+        })
+        }
+        let myLayerOptions3 = {
+        pointToLayer: createCustomIcon3
+        }
+    
+    
+    
+    
+    // Polygon Styling nach Klasse
+    function getClassColor(feature){
+        console.log(feature)
+        switch (feature.properties.Klasse){
+            case 1 : return '#000000';
+            case 2 : return '#757575';
+            case 3 : return '#DBDBDB';
+            case 4 : return '#115F11';
+            case 5 : return '#24FF84';
+            case 6 : return '#22DFA3';
+            case 7 : return '#986C00';
+            case 8 : return '#DED402';
+            case 10 : return '#72BA9E';
+            case 11 : return '#FF7171';
+            case 12 : return '#D8FF00';
+            case 13 : return '#7A00FC';
+        }
+       };
+    
+    function ClassStyle(feature) {
+        return {
+        fillColor: getClassColor(feature),
+        weight: 2,
+        opacity: 10,
+        color: 'black',
+        dashArray: '3',
+        fillOpacity: 0.7
+        };
+    }    
 
 // Overlays
 	// Urflurkarte
 	var olay_ufk = L.geoJSON(ufk, {
+        style :ClassStyle,
         minZoom: 0,
         maxZoom: 12
     });
@@ -126,29 +204,42 @@
             maxZoom: 20
 		});
 	//olay_ufk_raster.addTo(mymap);
-	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); // Oberamtsbeschreibung hinzufügen - jeweils andere Zoomstufe 0-12 und 12-20 (OA)
-    
-        
+	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); 
         
 	// Karten von 1908 bis 1999
     
-    var olay_1908 = L.geoJSON(fk1908);
+    var olay_1908 = L.geoJSON(fk1908, {
+        style: ClassStyle
+    });
     //  olay_1908.addTo(mymap);
 	
-    var olay_1936 = L.geoJSON(fk1936korr);
+    var olay_1936 = L.geoJSON(fk1936korr, {
+        style: ClassStyle
+    });
     //olay_1936.addTo(mymap);
     
-    var olay_1963 = L.geoJSON(fk1963korr);
+    var olay_1963 = L.geoJSON(fk1963korr,{
+        style: ClassStyle
+    });
     //olay_1963.addTo(mymap);
     
-    var olay_1977 = L.geoJSON(fk1977korr);
+    var olay_1977 = L.geoJSON(fk1977korr,{
+        style: ClassStyle
+    });
     //olay_1977.addTo(mymap);
  
-    var olay_1987 = L.geoJSON(fk1987korr);
+    var olay_1987 = L.geoJSON(fk1987korr, {
+        style: ClassStyle
+    });
     //olay_1977.addTo(mymap);
     
-    var olay_1999 = L.geoJSON(fk1999korr);
+    var olay_1999 = L.geoJSON(fk1999korr, {
+        style: ClassStyle
+    });
     //olay_1999.addTo(mymap);
+    
+    // Style Versuch #2
+
     
 //Overlay Wanderwege
     //Sagenweg
@@ -169,16 +260,38 @@
     //hiking_ursula_rund_lang.addTo(mymap);
     
 //Overlay Points of Interest
-    //POI Demo nur für vorläufige Screenshots
-    var POI_demo = L.geoJSON(POI_demo, myLayerOptions);
-    //POI_demo.addTo(mymap);
     
+    var Klostergarten = L.geoJSON(Klostergarten);
+    //Klostergarten.addTo(mymap);
+    
+    var Georgenberg = L.geoJSON(Georgenberg, myLayerOptions);
+    //Georgenberg.addTo(mymap);
+    
+    var PfullingerHallen = L.geoJSON(PfullingerHallen, myLayerOptions3);
+    // PfullingerHallen.addTo(mymap);
+    
+    var Schönbergturm = L.geoJSON(Schönbergturm, myLayerOptions);
+    //Schönbergturm.addTo(mymap);
+    
+    var Stadtmuseeum = L.geoJSON(Stadtmuseeum, myLayerOptions3);
+    //Stadtmuseeum.addTo(mymap);
+    
+    var Touristeninformation = L.geoJSON(Touristeninformation, myLayerOptions2);
+    //Touristeninformation.addTo(mymap);
+    
+    var Trachtenmuseeum = L.geoJSON(Trachtenmuseeum, myLayerOptions3);
+    // Trachtenmuseeum.addTo(mymap);
+    
+    var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Stadtmuseeum, Touristeninformation, Trachtenmuseeum]);
+    
+   
     // Legend
 	var basemaps = {
 		"Open Street Map": basemap_osm,
 		"Maps4BW": basemap_maps4bw,
-        //"Oberamtsbeschreibung Reutlingen": basemap_OART,
+        "Oberamtsbeschreibung Reutlingen": basemap_OART
        };
+    
 		
 	var overlays = {
 		"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
@@ -191,15 +304,22 @@
         "Sagenweg": hiking_sagenweg,
         "Ursulaberg Rundweg kurz": hiking_ursula_rund_kurz,
         "Ursulaberg Rundweg Lang": hiking_ursula_rund_lang,
-        "Points of Interest": POI_demo,
+        "Klostergarten": Klostergarten,
+        "Georgenberg" : Georgenberg,
+        "Pfullinger Hallen" : PfullingerHallen,
+        "Schönbergturm" : Schönbergturm,
+        "Stadtmuseeum im Schlössle" : Stadtmuseeum,
+        "Touristeninformation" : Touristeninformation,
+        "Trachtenmuseeum" : Trachtenmuseeum,
+        "Sehenswertes in Pfullingen" : PointsOfInterest,
        
     };
       
- 
+    
 // Layer Controlls
-	var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
+var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
-
+    
 //Pop-Ups Vorläufig
     POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
 	
@@ -213,6 +333,8 @@
 	}
 
 	mymap.on('locationfound', onLocationFound);
+    
+
 	
 </script>
 	
