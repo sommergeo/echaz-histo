@@ -14,8 +14,8 @@
     <link rel= "stylesheet" href="data/Plugins/leaflet.groupedlayercontrol.css" />
     <link rel= "stylesheet" href="data/Plugins/MarkerCluster.css" />
     <link rel="stylesheet" href="data/Plugins/MarkerCluster.Default.css" />
-    
     <link rel="stylesheet" href="data/Plugins/jquery-ui.css" />
+    <link rel="stylesheet" href="data/Plugins/L.Control.Layers.Tree.css"/>
     
 	
 
@@ -72,7 +72,7 @@
 <!--<div id="mapid" style="width: 600px; height: 400px; position: relative;"></div> -->
 <div id="mapid" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
 
-    
+<script src="data/Plugins/L.Control.Layers.Tree.js"></script>    
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
 <script src="data/Plugins/jquery-1.9.1.min.js" ></script>
 <script src="data/Plugins/jquery-ui.js" ></script>
@@ -99,7 +99,6 @@
 <script src="data/geojson/Klostergarten.js"></script>
 <script>
 
-    var sliderControl = null;
 	
 	// Create Leaflet map
 	var mymap = L.map('mapid').setView([48.456930, 9.228969], 14);
@@ -255,22 +254,19 @@
 // Overlays
 	// Urflurkarte
 	var olay_ufk = L.geoJSON(ufk, {
-        style :ClassStyle,
-        minZoom: 0,
-        maxZoom: 15
+        sytle: ClassStyle
     });
 	//olay_ufk.addTo(mymap);
+    
 	var olay_ufk_raster = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_LGL-BW_HIST_FKWue_25_K?user=la_bw&password=???", {
 			layers: 'RDS.LY_HISTFK25_SWKOMBI',
 			format: 'image/png',
 			transparent: false,
 			attribution: "&copy; LGL, <a href=\"http://www.lgl-bw.de\" target=\"_blank\">www.lgl-bw.de</a>",
-			minZoom: 0,
-            maxZoom: 12
 		});
 	//olay_ufk_raster.addTo(mymap);
-	//var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART], {
-    //}); 
+    
+	var lg_ufk = L.layerGroup([olay_ufk_raster, olay_ufk_raster]); 
         
 	// Karten von 1908 bis 1999
     
@@ -354,7 +350,7 @@
     
     
     // Popup Styling Trachtenmuseum
-    Trachtenmuseeum.bindPopup(' <h3>Trachtenmuseum</h3> <img style="max-height:500px;max-width:300px;" src="https://www.pfullingen.de/ceasy/resource/8390?&doCrop=1&width=1830&height=690"/> <p> <b>Adresse:</b><br> Josefstraße 5/2 <br> 72793 Pfullingen',{ 
+    Trachtenmuseeum.bindPopup(' <h3>Trachten und Mühlenmuseum</h3> <img style="max-height:500px;max-width:300px;" src="https://www.pfullingen.de/ceasy/resource/8390?&doCrop=1&width=1830&height=690"/> <p> <b>Adresse:</b><br> Josefstraße 5/2 <br> 72793 Pfullingen <br><br> Weitere Informationen unter <br> <a href="https://www.pfullingen.de/de/entdecken-erholen/Sehenswertes/Museen">"Museen in Pfullingen"</a> ',{ 
         maxWidth : 300,
     });
     
@@ -379,6 +375,7 @@
     
 		
 	var overlays = {
+       // "UFK": lg_ufk,
 		//"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
         "1908 Landnutzung": olay_1908,
         "1936 Landnutzung": olay_1936,
@@ -399,6 +396,8 @@
         "Sehenswertes in Pfullingen" : PointsOfInterest
        
     };
+    
+
 
     
     
