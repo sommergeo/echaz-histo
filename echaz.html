@@ -5,10 +5,17 @@
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
 	integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
 	crossorigin=""/>
-
+    
+    
 	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
 	integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
 	crossorigin=""></script>
+    
+    <link rel= "stylesheet" href="data/Plugins/leaflet.groupedlayercontrol.css" />
+    <link rel= "stylesheet" href="data/Plugins/MarkerCluster.css" />
+    <link rel="stylesheet" href="data/Plugins/MarkerCluster.Default.css" />
+    
+    <link rel="stylesheet" href="data/Plugins/jquery-ui.css" />
     
 	
 
@@ -19,9 +26,43 @@
 		padding: 0;
 		margin: 0;
 	}
-	</style>
+
+.legend {
+  padding: 6px 8px;
+  font: 14px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 1);
+  line-height: 24px;
+  color: #555;
+}
+.legend h4 {
+  text-align: center;
+  font-size: 16px;
+  margin: 2px 12px 8px;
+  color: #777;
+}
+
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin: 0 8px 0 0;
+  opacity: 1;
+}
+
+.legend2 {
+  padding: 6px 8px;
+  font: 14px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 1);
+  line-height: 24px;
+  color: #555;
+   
+    </style>
+    
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
 
 </head>
 
@@ -31,7 +72,13 @@
 <!--<div id="mapid" style="width: 600px; height: 400px; position: relative;"></div> -->
 <div id="mapid" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
 
-<script src="Plugins/leaflet.groupedlayercontrol.js" ></script>
+    
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
+<script src="data/Plugins/jquery-1.9.1.min.js" ></script>
+<script src="data/Plugins/jquery-ui.js" ></script>
+<script src="data/Plugins/leaflet.SliderControl.min.js" ></script>
+<script src="data/Plugins/leaflet.markercluster.js"></script>
+<script src="data/Plugins/leaflet.groupedlayercontrol.js" ></script>
 <script src="data/geojson/ufk.js" ></script>
 <script src="data/geojson/1908.js"></script>
 <script src="data/geojson/1963korr.js"></script>
@@ -52,6 +99,7 @@
 <script src="data/geojson/Klostergarten.js"></script>
 <script>
 
+    var sliderControl = null;
 	
 	// Create Leaflet map
 	var mymap = L.map('mapid').setView([48.456930, 9.228969], 14);
@@ -81,11 +129,11 @@
         layers: 'Oberamt_Reutlingen_Karte4_modified',
         format: 'image/png',
         transparent: 'true',
-        minZoom: 0,
-        maxZoom: 12,
+        maxZoom: 13,
         attribution: '<a href="https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen">Wikisource</a>'
         });
     // basemap_OART.addTo(mymap);
+    
         
     
     //STYLING
@@ -114,7 +162,7 @@
             iconUrl: 'https://image.flaticon.com/icons/svg/1827/1827911.svg',
             iconSize: [50, 40],
             iconAnchor: [12, 12],
-            popupAnchor: [13, -10],
+            popupAnchor: [0, -20],
         })
         return L.marker(latlng, {
             icon: myIcon
@@ -129,7 +177,7 @@
         let myIcon2 = L.icon({
             iconUrl: 'https://image.flaticon.com/icons/svg/1828/1828872.svg',
             iconSize: [35,35],
-            popupAnchor: [10, -10],
+            popupAnchor: [0, -20],
         }); 
         return L.marker(latlng, {
             icon: myIcon2
@@ -144,7 +192,7 @@
         let myIcon3 = L.icon({
             iconUrl: 'https://image.flaticon.com/icons/svg/273/273638.svg',
             iconSize: [30, 30],
-            popupAnchor: [10,-10],
+            popupAnchor: [0,-20],
         });
         return L.marker(latlng, {
             icon: myIcon3
@@ -155,44 +203,61 @@
         }
     
     
+    //Custom Icon for Erholung Klostergarten
+    function createCustomIcon4(feature, latlng){
+        let myIcon4 = L.icon({
+            iconUrl: ' https://image.flaticon.com/icons/svg/494/494959.svg',
+            iconSize: [30, 30],
+            popupAnchor: [0,-20],
+        });
+        return L.marker(latlng, {
+            icon: myIcon4
+        })
+        }
+        let myLayerOptions4 = {
+        pointToLayer: createCustomIcon4
+        }
+        
+        
+
     
     
     // Polygon Styling nach Klasse
     function getClassColor(feature){
         console.log(feature)
         switch (feature.properties.Klasse){
-            case 1 : return '#000000';
-            case 2 : return '#757575';
-            case 3 : return '#DBDBDB';
-            case 4 : return '#115F11';
-            case 5 : return '#24FF84';
-            case 6 : return '#22DFA3';
-            case 7 : return '#986C00';
-            case 8 : return '#DED402';
-            case 10 : return '#72BA9E';
-            case 11 : return '#FF7171';
-            case 12 : return '#D8FF00';
-            case 13 : return '#7A00FC';
+            case 1 : return '#000000'; //Industrie/Gewerbe
+            case 2 : return '#757575';  // Mischgebiet
+            case 3 : return '#DBDBDB';  // Wohngebiet
+            case 4 : return '#115F11';  // Wald
+            case 5 : return '#24FF84';  // Grünland
+            case 6 : return '#22DFA3';  // Heide/ Weide
+            case 7 : return '#986C00';  // Acker
+            case 8 : return '#DED402';  // Baumacker
+            case 10 : return '#72BA9E'; // Garten / Park
+            case 11 : return '#FF7171'; // Wein
+            case 12 : return '#D8FF00'; //  Hopfen
+            case 13 : return '#7A00FC'; // Rohstoffe & Entsorgung
         }
        };
     
     function ClassStyle(feature) {
         return {
-        fillColor: getClassColor(feature),
-        weight: 2,
+       fillColor: getClassColor(feature),
+       weight: 2,
         opacity: 10,
         color: 'black',
         dashArray: '3',
         fillOpacity: 0.7
-        };
-    }    
+        }
+    };   
 
 // Overlays
 	// Urflurkarte
 	var olay_ufk = L.geoJSON(ufk, {
         style :ClassStyle,
         minZoom: 0,
-        maxZoom: 12
+        maxZoom: 15
     });
 	//olay_ufk.addTo(mymap);
 	var olay_ufk_raster = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_LGL-BW_HIST_FKWue_25_K?user=la_bw&password=???", {
@@ -200,46 +265,51 @@
 			format: 'image/png',
 			transparent: false,
 			attribution: "&copy; LGL, <a href=\"http://www.lgl-bw.de\" target=\"_blank\">www.lgl-bw.de</a>",
-			minZoom: 12,
-            maxZoom: 20
+			minZoom: 0,
+            maxZoom: 12
 		});
 	//olay_ufk_raster.addTo(mymap);
-	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); 
+	//var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART], {
+    //}); 
         
 	// Karten von 1908 bis 1999
     
     var olay_1908 = L.geoJSON(fk1908, {
-        style: ClassStyle
+        style: ClassStyle,
+        time: "1908"
     });
     //  olay_1908.addTo(mymap);
 	
     var olay_1936 = L.geoJSON(fk1936korr, {
-        style: ClassStyle
+        style: ClassStyle,
+        time: "1936"
     });
     //olay_1936.addTo(mymap);
     
     var olay_1963 = L.geoJSON(fk1963korr,{
-        style: ClassStyle
+        style: ClassStyle,
+        time: "1963"
     });
     //olay_1963.addTo(mymap);
     
     var olay_1977 = L.geoJSON(fk1977korr,{
-        style: ClassStyle
+        style: ClassStyle,
+        time: "1977"
     });
     //olay_1977.addTo(mymap);
  
     var olay_1987 = L.geoJSON(fk1987korr, {
-        style: ClassStyle
+        style: ClassStyle,
+        time: "1987"
     });
     //olay_1977.addTo(mymap);
     
     var olay_1999 = L.geoJSON(fk1999korr, {
-        style: ClassStyle
+        style: ClassStyle,
+        time: "1999"
     });
     //olay_1999.addTo(mymap);
     
-    // Style Versuch #2
-
     
 //Overlay Wanderwege
     //Sagenweg
@@ -261,7 +331,7 @@
     
 //Overlay Points of Interest
     
-    var Klostergarten = L.geoJSON(Klostergarten);
+    var Klostergarten = L.geoJSON(Klostergarten, myLayerOptions4);
     //Klostergarten.addTo(mymap);
     
     var Georgenberg = L.geoJSON(Georgenberg, myLayerOptions);
@@ -282,8 +352,23 @@
     var Trachtenmuseeum = L.geoJSON(Trachtenmuseeum, myLayerOptions3);
     // Trachtenmuseeum.addTo(mymap);
     
-    var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Stadtmuseeum, Touristeninformation, Trachtenmuseeum]);
     
+    // Popup Styling Trachtenmuseum
+    Trachtenmuseeum.bindPopup(' <h3>Trachtenmuseum</h3> <img style="max-height:500px;max-width:300px;" src="https://www.pfullingen.de/ceasy/resource/8390?&doCrop=1&width=1830&height=690"/> <p> <b>Adresse:</b><br> Josefstraße 5/2 <br> 72793 Pfullingen',{ 
+        maxWidth : 300,
+    });
+    
+    Schönbergturm.bindPopup(' <h3>Schönbergturm</h3> <img style="max-height:500px;max-width:300px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Schönbergturm-02.jpg/800px-Schönbergturm-02.jpg"/> <p> <b>Höhe über NN:</b><br> 793m <br> <b> Höhe des Turms </b> <br> 28m <br> <b> Koordinaten: </b> <br> UTM: 32N E 516968 N 5365380 <br> GPS:  N 48.44133° E 009.22943° ',{ 
+        maxWidth : 300,
+    });
+    
+    var Marker = L.markerClusterGroup();
+    Marker.addLayers([Stadtmuseeum, Trachtenmuseeum, Touristeninformation]);
+    //Marker.addTo(mymap);
+    
+    var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Marker]);
+    
+
    
     // Legend
 	var basemaps = {
@@ -294,7 +379,7 @@
     
 		
 	var overlays = {
-		"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
+		//"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
         "1908 Landnutzung": olay_1908,
         "1936 Landnutzung": olay_1936,
         "1963 Landnutzung": olay_1963,
@@ -311,18 +396,41 @@
         "Stadtmuseeum im Schlössle" : Stadtmuseeum,
         "Touristeninformation" : Touristeninformation,
         "Trachtenmuseeum" : Trachtenmuseeum,
-        "Sehenswertes in Pfullingen" : PointsOfInterest,
+        "Sehenswertes in Pfullingen" : PointsOfInterest
        
     };
-      
-    
-// Layer Controlls
-var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
     
-//Pop-Ups Vorläufig
-    POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
-	
+    
+// Layer Controlls
+var legend2 = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
+
+    var legend = L.control({ position: "bottomleft" });
+
+legend.onAdd = function(map) {
+  var div = L.DomUtil.create('div', 'legend');
+    div.innerHTML += "<h4>Landnutzungsklassen</h4>";
+    div.innerHTML += '<i style="background: #000000"></i><span>Industrie / Gewerbe</span><br>';
+    div.innerHTML += '<i style="background: #757575"></i><span>Mischgebiet</span><br>';
+    div.innerHTML += '<i style="background: #DBDBDB"></i><span>Wohngebiet</span><br>';
+    div.innerHTML += '<i style="background: #115F11"></i><span>Wald</span><br>';
+    div.innerHTML += '<i style="background: #24FF84"></i><span>Grünland</span><br>';
+    div.innerHTML += '<i style="background: #22DFA3"></i><span>Heide / Weide</span><br>';
+    div.innerHTML += '<i style="background: #986C00"></i><span>Acker</span><br>';
+    div.innerHTML += '<i style="background: #DED402"></i><span>Baumacker</span><br>';
+    div.innerHTML += '<i style="background: #72BA9E"></i><span>Garten / Park</span><br>';
+    div.innerHTML += '<i style="background: #FF7171"></i><span>Wein</span><br>';
+    div.innerHTML += '<i style="background: #D8FF00"></i><span>Hopfen</span><br>';
+    div.innerHTML += '<i style="background: #7A00FC"></i><span>Rohstoffe & Entsorgung </span><br>';
+    
+  return div;
+};
+
+legend.addTo(mymap);
+    
+
+
+
 	// Locate user
 	mymap.locate({setView: true, maxZoom: 18});
 	function onLocationFound(e) {
