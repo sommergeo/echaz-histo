@@ -20,12 +20,13 @@
 	
 
 	<style>
-	html, body, #map {
-		width: 100%;
-		height: 100%;
-		padding: 0;
-		margin: 0;
+html, body, #map {
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0;
 	}
+
 
 .legend {
   padding: 6px 8px;
@@ -35,6 +36,7 @@
   line-height: 24px;
   color: #555;
 }
+        
 .legend h4 {
   text-align: center;
   font-size: 16px;
@@ -136,7 +138,7 @@
         layers: 'Oberamt_Reutlingen_Karte4_modified',
         format: 'image/png',
         transparent: 'true',
-        maxZoom: 13,
+        //maxZoom: 13,
         attribution: '<a href="https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen">Wikisource</a>'
         });
     // basemap_OART.addTo(mymap);
@@ -365,14 +367,37 @@
 //  ********************************************************************************************  
 //POP-UPs
     // Popup Styling Trachtenmuseum
-    Trachtenmuseeum.bindPopup(' <h3>Trachten und Mühlenmuseum</h3> <img src="https://www.pfullingen.de/ceasy/resource/8390?&doCrop=1&width=1830&height=690" + class="popupImg" /> <p> <b>Adresse:</b><br> Josefstraße 5/2 <br> 72793 Pfullingen <br><br> Weitere Informationen unter <br> <a href="https://www.pfullingen.de/de/entdecken-erholen/Sehenswertes/Museen">"Museen in Pfullingen"</a> ',{ 
+    Trachtenmuseeum.bindPopup(' <h3>Trachten und Mühlenmuseum</h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Pfullingen_Baumannsche_Mühle-1.jpg" + class="popupImg" /> <p> <b>Adresse:</b><br> Josefstraße 5/2 <br> 72793 Pfullingen <br><br> Weitere Informationen unter <br> <a href="https://www.pfullingen.de/ceasy/resource/?id=7441&download=1">"Pfullinger Museen im Überblick"</a> ',{ 
         maxWidth : 300,
     });
     
-    Schönbergturm.bindPopup(' <h3>Schönbergturm</h3> <img " src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Schönbergturm-02.jpg/800px-Schönbergturm-02.jpg" + class="popupImg"/> <p> <b>Höhe über NN:</b><br> 793m <br> <b> Höhe des Turms </b> <br> 28m <br> <b> Koordinaten: </b> <br> UTM: 32N E 516968 N 5365380 <br> GPS:  N 48.44133° E 009.22943° ',{ 
+    Schönbergturm.bindPopup(' <h3>Schönbergturm</h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Schönbergturm-02.jpg/800px-Schönbergturm-02.jpg" + class="popupImg"/> <p> <b>Höhe über NN:</b><br> 793m <br> <b> Höhe des Turms </b> <br> 28m <br> <b> Koordinaten: </b> <br> UTM: 32N E 516968 N 5365380'
+    ,{ 
         maxWidth : 300,
     });
     
+    Georgenberg.bindPopup(' <h3>Georgenberg</h3> <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Blick_vom_Georgenberg_auf_die_Achalm_Reutlingen.jpg" + class="popupImg"/> <p> <b>Höhe über NN:</b><br> 602m <br><b> Koordinaten: </b> <br> UTM: 32U 515640 5368729',{ 
+        maxWidth : 300,
+    });
+    
+    PfullingerHallen.bindPopup(' <h3>Pfullinger Hallen</h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/9/97/Pfullinger_Hallen-4.jpg" + class="popupImg" /> <p> <b>Adresse:</b><br> Klosterstraße 110 <br> 72793 Pfullingen <br><br> Weitere Informationen unter <br> <a href="https://www.pfullingen.de/ceasy/resource/?id=7473&download=1">"Sehenswertes & Kultur"</a> ',{ 
+        maxWidth : 300,
+    });
+    
+    Stadtmuseeum.bindPopup(' <h3> Stadtgeschichtliches Museum im Schlössle</h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Pfullingen%2C_Schlößle.jpg" + class="popupImg" /> <p> <b>Adresse:</b><br> Griesstraße 24/1 <br> 72793 Pfullingen <br><br> Weitere Informationen unter <br> <a href="https://www.pfullingen.de/ceasy/resource/?id=7441&download=1">"Pfullinger Museen im Überblick"</a> ',{ 
+    maxWidth : 300,
+    });
+    
+    Touristeninformation.bindPopup(' <h3>Touristen Information </h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Pfullingen_Rathaus_IV%2C_ehem_Pfarrhaus_I.jpg" + class="popupImg" /> <p> <b>Adresse:</b><br> Griesstraße 6 <br> 72793 Pfullingen <br><br> <b>Öffnungszeiten</b><br>MO - MI: 8:00-12:00 Uhr & 14:00-16:00 Uhr <br> DO: 8:00-12:00 Uhr & 14:00-18.30 Uhr <br> FR: 8:00-12:30 Uhr ',{ 
+    maxWidth : 300,
+    });
+    
+    Klostergarten.bindPopup(' <h3>Klostergarten Restaurant & Hotel</h3> <br> <b>Adresse:</b><br> Klosterstraße 30 <br> 72793 Pfullingen <br><br> <b>Warme Küche</b><br> MO - FR: 11:30 - 14:00 Uhr & 17:30 - 21:30 Uhr <br>SA: 17:30 - 21:30 Uhr <br> SO: 11:30 - 14:00 Uhr & 17:30 - 20:30 Uhr',{ 
+    maxWidth : 300,
+    });
+
+
+
  //  ********************************************************************************************  
 //MARKER CLUSTER
     
@@ -395,12 +420,12 @@
 	var basemaps = {
 		"Open Street Map": basemap_osm,
 		"Maps4BW": basemap_maps4bw,
-        //"Oberamtsbeschreibung Reutlingen": basemap_OART
+        "Oberamtsbeschreibung Reutlingen": basemap_OART
        };
     
     
 //Color Legend for Landuse
-    legend.onAdd = function(map) {
+   legend.onAdd = function(map) {
   var div = L.DomUtil.create('div', 'legend');
     div.innerHTML += "<h4>Landnutzungsklassen</h4>";
     div.innerHTML += '<i style="background: #000000"></i><span>Industrie / Gewerbe</span><br>';
@@ -444,7 +469,6 @@
         "Touristeninformation" : Touristeninformation,
         "Trachtenmuseeum" : Trachtenmuseeum,
         "Sehenswertes in Pfullingen" : PointsOfInterest
-       
     };
     
 
@@ -459,9 +483,12 @@ var legend2 = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(myma
 var legend = L.control({ position: "bottomleft" });
     
     mymap.on('overlayadd', function (eventLayer){
-        if(eventLayer.name = '1908 Landnutzung'){
-           mymap.addControl(legend);
-            legend.addTo(mymap);
+        if(eventLayer.name === '1908 Landnutzung'){
+           this.addControl(legend);
+            legend.addTo(this);
+        }
+        else {
+            this.removeControl(legend);
         }
     });
 
