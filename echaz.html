@@ -276,6 +276,7 @@ html, body, #map {
         sytle: ClassStyle
     });
 	//olay_ufk.addTo(mymap);
+    
 	var olay_ufk_raster = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_LGL-BW_HIST_FKWue_25_K?user=la_bw&password=???", {
 			layers: 'RDS.LY_HISTFK25_SWKOMBI',
 			format: 'image/png',
@@ -284,7 +285,7 @@ html, body, #map {
 		});
 	//olay_ufk_raster.addTo(mymap);
     
-//	var lg_ufk = L.layerGroup([olay_ufk_raster, olay_ufk_raster]); 
+	var lg_ufk = L.layerGroup([olay_ufk, basemap_OART]); 
 //        // lg_ufk.addTo(mymap);
 	
     
@@ -399,19 +400,19 @@ html, body, #map {
 
 
  //  ********************************************************************************************  
-//MARKER CLUSTER
+//MARKER CLUSTER ____ Currently in update progress and therefore disabled
     
-    var Marker = L.markerClusterGroup();
-    Marker.addLayers([Stadtmuseeum, Trachtenmuseeum, Touristeninformation]);
-    
+//    var Marker = L.markerClusterGroup();
+//    Marker.addLayers([Stadtmuseeum, Trachtenmuseeum, Touristeninformation]);
+//   
 //    Marker.on("clusterclick", function(a){
 //        console.log("cluster with" + a.layer.getAllChildMarkers().length);
 //    });
 //    Marker.on('click', function(a){
 //        console.log('single marker click');
 //    });
-    
-    var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Marker]);
+//    
+    var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Touristeninformation, Trachtenmuseeum, Stadtmuseeum]);
     
  //  ********************************************************************************************  
 //Legende
@@ -450,8 +451,8 @@ legend.addTo(mymap);
 //  ********************************************************************************************  
  //Overlays
 	var overlays = {
-       //"Urflurkarte": olay_ufk,
-		//"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
+        //"Urflurkarte": olay_ufk,
+		"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
         "1908 Landnutzung": olay_1908,
         "1936 Landnutzung": olay_1936,
         "1963 Landnutzung": olay_1963,
@@ -461,14 +462,14 @@ legend.addTo(mymap);
         "Sagenweg": hiking_sagenweg,
         "Ursulaberg Rundweg kurz": hiking_ursula_rund_kurz,
         "Ursulaberg Rundweg Lang": hiking_ursula_rund_lang,
-        "Klostergarten": Klostergarten,
-        "Georgenberg" : Georgenberg,
-        "Pfullinger Hallen" : PfullingerHallen,
-        "Schönbergturm" : Schönbergturm,
-        "Stadtmuseeum im Schlössle" : Stadtmuseeum,
-        "Touristeninformation" : Touristeninformation,
-        "Trachtenmuseeum" : Trachtenmuseeum,
-        "Sehenswertes in Pfullingen" : PointsOfInterest
+        //"Klostergarten": Klostergarten,
+        //"Georgenberg" : Georgenberg,
+        //"Pfullinger Hallen" : PfullingerHallen,
+        //"Schönbergturm" : Schönbergturm,
+        //"Stadtmuseum im Schlössle" : Stadtmuseeum,
+        //"Touristeninformation" : Touristeninformation,
+        //"Trachtenmuseum" : Trachtenmuseeum,
+        "Sehenswertes in Pfullingen" : PointsOfInterest,
     };
     
 
@@ -480,17 +481,17 @@ legend.addTo(mymap);
 var legend2 = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
    
-var legend = L.control({ position: "bottomleft" });
-    
-    mymap.on('overlayadd', function (eventLayer){
-        if(eventLayer.name === '1908 Landnutzung'){
-           this.addControl(legend);
-            legend.addTo(this);
-        }
-        else {
-            this.removeControl(legend);
-        }
-    });
+//var legend = L.control({ position: "bottomleft" });
+//    
+//    mymap.on('overlayadd', function (eventLayer){
+//        if(eventLayer.name === '1908 Landnutzung'){
+//           this.addControl(legend);
+//            legend.addTo(this);
+//        }
+//        else {
+//            this.removeControl(legend);
+//        }
+//    });
 
 	// Locate user
 	mymap.locate({setView: true, maxZoom: 18});
