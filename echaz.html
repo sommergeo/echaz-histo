@@ -5,23 +5,72 @@
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
 	integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
 	crossorigin=""/>
-
+    
+    
 	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
 	integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
 	crossorigin=""></script>
     
+    <link rel= "stylesheet" href="data/Plugins/leaflet.groupedlayercontrol.css" />
+    <link rel= "stylesheet" href="data/Plugins/MarkerCluster.css" />
+    <link rel="stylesheet" href="data/Plugins/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="data/Plugins/jquery-ui.css" />
+    <link rel="stylesheet" href="data/Plugins/L.Control.Layers.Tree.css"/>
+    
 	
 
 	<style>
-	html, body, #map {
-		width: 100%;
-		height: 100%;
-		padding: 0;
-		margin: 0;
+html, body, #map {
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0;
 	}
-	</style>
+
+
+.legend {
+  padding: 6px 8px;
+  font: 14px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 1);
+  line-height: 24px;
+  color: #555;
+}
+        
+.legend h4 {
+  text-align: center;
+  font-size: 16px;
+  margin: 2px 12px 8px;
+  color: #777;
+}
+
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin: 0 8px 0 0;
+  opacity: 1;
+}
+
+.legend2 {
+  padding: 6px 8px;
+  font: 14px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 1);
+  line-height: 24px;
+  color: #555;
+        }
+
+.popupImg {
+    max-width: 80%;
+    max-height: 80%;
+}
+   
+    </style>
+    
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
 
 </head>
 
@@ -31,7 +80,13 @@
 <!--<div id="mapid" style="width: 600px; height: 400px; position: relative;"></div> -->
 <div id="mapid" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
 
-<script src="Plugins/leaflet.groupedlayercontrol.js" ></script>
+<script src="data/Plugins/L.Control.Layers.Tree.js"></script>    
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
+<script src="data/Plugins/jquery-1.9.1.min.js" ></script>
+<script src="data/Plugins/jquery-ui.js" ></script>
+<script src="data/Plugins/leaflet.SliderControl.min.js" ></script>
+<script src="data/Plugins/leaflet.markercluster.js"></script>
+<script src="data/Plugins/leaflet.groupedlayercontrol.js" ></script>
 <script src="data/geojson/ufk.js" ></script>
 <script src="data/geojson/1908.js"></script>
 <script src="data/geojson/1963korr.js"></script>
@@ -61,7 +116,9 @@
 	var legend = L.control.scale({maxWidth: 250, metric: true, imperial: true}).addTo(mymap);
 
 	
-	// Add basemaps
+//  ********************************************************************************************  
+//Basemaps
+    
 	// Basemap 1: OSM
 	var basemap_osm = L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
 		attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>',
@@ -81,15 +138,16 @@
         layers: 'Oberamt_Reutlingen_Karte4_modified',
         format: 'image/png',
         transparent: 'true',
-        minZoom: 0,
-        maxZoom: 12,
+        //maxZoom: 13,
         attribution: '<a href="https://de.wikisource.org/wiki/Beschreibung_des_Oberamts_Reutlingen#Beilagen">Wikisource</a>'
         });
     // basemap_OART.addTo(mymap);
+    
         
     
-    //STYLING
-        //Wanderwege & POIs
+//  ********************************************************************************************  
+//Styling Hiking Trails
+
     var mystyle_sagenweg = {
         "color": "#e41a1c",
         "weight": 7,
@@ -107,14 +165,18 @@
         "weight": 7,
         "opacity": 0.6,
     };
-
-    // Custom Icons for Aussichtspunkte
+    
+    
+//  ********************************************************************************************  
+//Custom Icons POIs
+    
+    //Aussichtspunkte
     function createCustomIcon (feature, latlng){
         let myIcon = L.icon ({
             iconUrl: 'https://image.flaticon.com/icons/svg/1827/1827911.svg',
             iconSize: [50, 40],
             iconAnchor: [12, 12],
-            popupAnchor: [13, -10],
+            popupAnchor: [0, -20],
         })
         return L.marker(latlng, {
             icon: myIcon
@@ -124,12 +186,12 @@
         pointToLayer: createCustomIcon    
     }
     
-     //Custom Icon for POI Touristeninformation
+    //Tourist Information
     function createCustomIcon2(feature, latlng){
         let myIcon2 = L.icon({
             iconUrl: 'https://image.flaticon.com/icons/svg/1828/1828872.svg',
             iconSize: [35,35],
-            popupAnchor: [10, -10],
+            popupAnchor: [0, -20],
         }); 
         return L.marker(latlng, {
             icon: myIcon2
@@ -144,7 +206,7 @@
         let myIcon3 = L.icon({
             iconUrl: 'https://image.flaticon.com/icons/svg/273/273638.svg',
             iconSize: [30, 30],
-            popupAnchor: [10,-10],
+            popupAnchor: [0,-20],
         });
         return L.marker(latlng, {
             icon: myIcon3
@@ -155,59 +217,79 @@
         }
     
     
-    
+    //Custom Icon for Erholung Klostergarten
+    function createCustomIcon4(feature, latlng){
+        let myIcon4 = L.icon({
+            iconUrl: ' https://image.flaticon.com/icons/svg/494/494959.svg',
+            iconSize: [30, 30],
+            popupAnchor: [0,-20],
+        });
+        return L.marker(latlng, {
+            icon: myIcon4
+        })
+        }
+        let myLayerOptions4 = {
+        pointToLayer: createCustomIcon4
+        }
+        
+        
+
+ //  ********************************************************************************************  
+//Polygon Styling   
     
     // Polygon Styling nach Klasse
     function getClassColor(feature){
         console.log(feature)
         switch (feature.properties.Klasse){
-            case 1 : return '#000000';
-            case 2 : return '#757575';
-            case 3 : return '#DBDBDB';
-            case 4 : return '#115F11';
-            case 5 : return '#24FF84';
-            case 6 : return '#22DFA3';
-            case 7 : return '#986C00';
-            case 8 : return '#DED402';
-            case 10 : return '#72BA9E';
-            case 11 : return '#FF7171';
-            case 12 : return '#D8FF00';
-            case 13 : return '#7A00FC';
+            case 1 : return '#000000'; //Industrie/Gewerbe
+            case 2 : return '#757575';  // Mischgebiet
+            case 3 : return '#DBDBDB';  // Wohngebiet
+            case 4 : return '#115F11';  // Wald
+            case 5 : return '#24FF84';  // Grünland
+            case 6 : return '#22DFA3';  // Heide/ Weide
+            case 7 : return '#986C00';  // Acker
+            case 8 : return '#DED402';  // Baumacker
+            case 10 : return '#72BA9E'; // Garten / Park
+            case 11 : return '#FF7171'; // Wein
+            case 12 : return '#D8FF00'; // Hopfen
+            case 13 : return '#7A00FC'; // Rohstoffe & Entsorgung
         }
        };
     
     function ClassStyle(feature) {
         return {
-        fillColor: getClassColor(feature),
-        weight: 2,
+       fillColor: getClassColor(feature),
+       weight: 2,
         opacity: 10,
         color: 'black',
         dashArray: '3',
         fillOpacity: 0.7
-        };
-    }    
-
+        }
+    };   
+    
+    
+    
+//*****************************************************************************
 // Overlays
-	// Urflurkarte
+    // Urflurkarte
 	var olay_ufk = L.geoJSON(ufk, {
-        style :ClassStyle,
-        minZoom: 0,
-        maxZoom: 12
+        sytle: ClassStyle
     });
 	//olay_ufk.addTo(mymap);
+    
 	var olay_ufk_raster = L.tileLayer.wms("https://owsproxy.lgl-bw.de/owsproxy/ows/WMS_LGL-BW_HIST_FKWue_25_K?user=la_bw&password=???", {
 			layers: 'RDS.LY_HISTFK25_SWKOMBI',
 			format: 'image/png',
 			transparent: false,
 			attribution: "&copy; LGL, <a href=\"http://www.lgl-bw.de\" target=\"_blank\">www.lgl-bw.de</a>",
-			minZoom: 12,
-            maxZoom: 20
 		});
 	//olay_ufk_raster.addTo(mymap);
-	var lg_ufk = L.layerGroup([olay_ufk, olay_ufk_raster, basemap_OART]); 
-        
-	// Karten von 1908 bis 1999
     
+	var lg_ufk = L.layerGroup([olay_ufk, basemap_OART]); 
+//        // lg_ufk.addTo(mymap);
+	
+    
+    // Landnutzung 1908 - 1999
     var olay_1908 = L.geoJSON(fk1908, {
         style: ClassStyle
     });
@@ -238,8 +320,6 @@
     });
     //olay_1999.addTo(mymap);
     
-    // Style Versuch #2
-
     
 //Overlay Wanderwege
     //Sagenweg
@@ -260,8 +340,9 @@
     //hiking_ursula_rund_lang.addTo(mymap);
     
 //Overlay Points of Interest
+
     
-    var Klostergarten = L.geoJSON(Klostergarten);
+    var Klostergarten = L.geoJSON(Klostergarten, myLayerOptions4);
     //Klostergarten.addTo(mymap);
     
     var Georgenberg = L.geoJSON(Georgenberg, myLayerOptions);
@@ -282,8 +363,59 @@
     var Trachtenmuseeum = L.geoJSON(Trachtenmuseeum, myLayerOptions3);
     // Trachtenmuseeum.addTo(mymap);
     
-    var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Stadtmuseeum, Touristeninformation, Trachtenmuseeum]);
     
+    
+//  ********************************************************************************************  
+//POP-UPs
+    // Popup Styling Trachtenmuseum
+    Trachtenmuseeum.bindPopup(' <h3>Trachten und Mühlenmuseum</h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Pfullingen_Baumannsche_Mühle-1.jpg" + class="popupImg" /> <p> <b>Adresse:</b><br> Josefstraße 5/2 <br> 72793 Pfullingen <br><br> Weitere Informationen unter <br> <a href="https://www.pfullingen.de/ceasy/resource/?id=7441&download=1">"Pfullinger Museen im Überblick"</a> ',{ 
+        maxWidth : 300,
+    });
+    
+    Schönbergturm.bindPopup(' <h3>Schönbergturm</h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Schönbergturm-02.jpg/800px-Schönbergturm-02.jpg" + class="popupImg"/> <p> <b>Höhe über NN:</b><br> 793m <br> <b> Höhe des Turms </b> <br> 28m <br> <b> Koordinaten: </b> <br> UTM: 32N E 516968 N 5365380'
+    ,{ 
+        maxWidth : 300,
+    });
+    
+    Georgenberg.bindPopup(' <h3>Georgenberg</h3> <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Blick_vom_Georgenberg_auf_die_Achalm_Reutlingen.jpg" + class="popupImg"/> <p> <b>Höhe über NN:</b><br> 602m <br><b> Koordinaten: </b> <br> UTM: 32U 515640 5368729',{ 
+        maxWidth : 300,
+    });
+    
+    PfullingerHallen.bindPopup(' <h3>Pfullinger Hallen</h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/9/97/Pfullinger_Hallen-4.jpg" + class="popupImg" /> <p> <b>Adresse:</b><br> Klosterstraße 110 <br> 72793 Pfullingen <br><br> Weitere Informationen unter <br> <a href="https://www.pfullingen.de/ceasy/resource/?id=7473&download=1">"Sehenswertes & Kultur"</a> ',{ 
+        maxWidth : 300,
+    });
+    
+    Stadtmuseeum.bindPopup(' <h3> Stadtgeschichtliches Museum im Schlössle</h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Pfullingen%2C_Schlößle.jpg" + class="popupImg" /> <p> <b>Adresse:</b><br> Griesstraße 24/1 <br> 72793 Pfullingen <br><br> Weitere Informationen unter <br> <a href="https://www.pfullingen.de/ceasy/resource/?id=7441&download=1">"Pfullinger Museen im Überblick"</a> ',{ 
+    maxWidth : 300,
+    });
+    
+    Touristeninformation.bindPopup(' <h3>Touristen Information </h3> <img  src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Pfullingen_Rathaus_IV%2C_ehem_Pfarrhaus_I.jpg" + class="popupImg" /> <p> <b>Adresse:</b><br> Griesstraße 6 <br> 72793 Pfullingen <br><br> <b>Öffnungszeiten</b><br>MO - MI: 8:00-12:00 Uhr & 14:00-16:00 Uhr <br> DO: 8:00-12:00 Uhr & 14:00-18.30 Uhr <br> FR: 8:00-12:30 Uhr ',{ 
+    maxWidth : 300,
+    });
+    
+    Klostergarten.bindPopup(' <h3>Klostergarten Restaurant & Hotel</h3> <br> <b>Adresse:</b><br> Klosterstraße 30 <br> 72793 Pfullingen <br><br> <b>Warme Küche</b><br> MO - FR: 11:30 - 14:00 Uhr & 17:30 - 21:30 Uhr <br>SA: 17:30 - 21:30 Uhr <br> SO: 11:30 - 14:00 Uhr & 17:30 - 20:30 Uhr',{ 
+    maxWidth : 300,
+    });
+
+
+
+ //  ********************************************************************************************  
+//MARKER CLUSTER ____ Currently in update progress and therefore disabled
+    
+//    var Marker = L.markerClusterGroup();
+//    Marker.addLayers([Stadtmuseeum, Trachtenmuseeum, Touristeninformation]);
+//   
+//    Marker.on("clusterclick", function(a){
+//        console.log("cluster with" + a.layer.getAllChildMarkers().length);
+//    });
+//    Marker.on('click', function(a){
+//        console.log('single marker click');
+//    });
+//    
+    var PointsOfInterest = L.layerGroup([Klostergarten, Georgenberg, PfullingerHallen, Schönbergturm, Touristeninformation, Trachtenmuseeum, Stadtmuseeum]);
+    
+ //  ********************************************************************************************  
+//Legende
    
     // Legend
 	var basemaps = {
@@ -292,8 +424,34 @@
         "Oberamtsbeschreibung Reutlingen": basemap_OART
        };
     
-		
+    
+//Color Legend for Landuse
+   legend.onAdd = function(map) {
+  var div = L.DomUtil.create('div', 'legend');
+    div.innerHTML += "<h4>Landnutzungsklassen</h4>";
+    div.innerHTML += '<i style="background: #000000"></i><span>Industrie / Gewerbe</span><br>';
+    div.innerHTML += '<i style="background: #757575"></i><span>Mischgebiet</span><br>';
+    div.innerHTML += '<i style="background: #DBDBDB"></i><span>Wohngebiet</span><br>';
+    div.innerHTML += '<i style="background: #115F11"></i><span>Wald</span><br>';
+    div.innerHTML += '<i style="background: #24FF84"></i><span>Grünland</span><br>';
+    div.innerHTML += '<i style="background: #22DFA3"></i><span>Heide / Weide</span><br>';
+    div.innerHTML += '<i style="background: #986C00"></i><span>Acker</span><br>';
+    div.innerHTML += '<i style="background: #DED402"></i><span>Baumacker</span><br>';
+    div.innerHTML += '<i style="background: #72BA9E"></i><span>Garten / Park</span><br>';
+    div.innerHTML += '<i style="background: #FF7171"></i><span>Wein</span><br>';
+    div.innerHTML += '<i style="background: #D8FF00"></i><span>Hopfen</span><br>';
+    div.innerHTML += '<i style="background: #7A00FC"></i><span>Rohstoffe & Entsorgung </span><br>';
+    
+  return div;
+};
+
+legend.addTo(mymap);
+
+    
+//  ********************************************************************************************  
+ //Overlays
 	var overlays = {
+        //"Urflurkarte": olay_ufk,
 		"1818-1840 Urflurkarte + Oberamtsbeschreibung": lg_ufk,
         "1908 Landnutzung": olay_1908,
         "1936 Landnutzung": olay_1936,
@@ -304,25 +462,37 @@
         "Sagenweg": hiking_sagenweg,
         "Ursulaberg Rundweg kurz": hiking_ursula_rund_kurz,
         "Ursulaberg Rundweg Lang": hiking_ursula_rund_lang,
-        "Klostergarten": Klostergarten,
-        "Georgenberg" : Georgenberg,
-        "Pfullinger Hallen" : PfullingerHallen,
-        "Schönbergturm" : Schönbergturm,
-        "Stadtmuseeum im Schlössle" : Stadtmuseeum,
-        "Touristeninformation" : Touristeninformation,
-        "Trachtenmuseeum" : Trachtenmuseeum,
+        //"Klostergarten": Klostergarten,
+        //"Georgenberg" : Georgenberg,
+        //"Pfullinger Hallen" : PfullingerHallen,
+        //"Schönbergturm" : Schönbergturm,
+        //"Stadtmuseum im Schlössle" : Stadtmuseeum,
+        //"Touristeninformation" : Touristeninformation,
+        //"Trachtenmuseum" : Trachtenmuseeum,
         "Sehenswertes in Pfullingen" : PointsOfInterest,
-       
     };
-      
     
-// Layer Controlls
-var legend = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
 
     
-//Pop-Ups Vorläufig
-    POI_demo.bindPopup("Das ist ein Pop-Up").openPopup();
-	
+
+    
+    
+// Legend Controlls
+var legend2 = L.control.layers(basemaps, overlays,{collapsed: false}).addTo(mymap);
+
+   
+//var legend = L.control({ position: "bottomleft" });
+//    
+//    mymap.on('overlayadd', function (eventLayer){
+//        if(eventLayer.name === '1908 Landnutzung'){
+//           this.addControl(legend);
+//            legend.addTo(this);
+//        }
+//        else {
+//            this.removeControl(legend);
+//        }
+//    });
+
 	// Locate user
 	mymap.locate({setView: true, maxZoom: 18});
 	function onLocationFound(e) {
